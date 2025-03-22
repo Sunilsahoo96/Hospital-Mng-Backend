@@ -1,7 +1,7 @@
 const Medicine = require("../Models/Medicine");
 
 // Add new medicine
-exports.addMedicine = async (req, res) => {
+const addMedicine = async (req, res) => {
   try {
     const { MedicineName, Manufacturer, MfgDate, ExpiryDate, BuyingPrice, SellingPrice, MedicinePerStrip } = req.body;
 
@@ -20,7 +20,7 @@ exports.addMedicine = async (req, res) => {
 };
 
 // Get all medicines
-exports.getMedicine = async (req, res) => {
+const getMedicine = async (req, res) => {
   try {
     const medicines = await Medicine.find().sort({ createdAt: -1 });
     res.status(200).json(medicines);
@@ -28,3 +28,5 @@ exports.getMedicine = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch medicines", details: error.message });
   }
 };
+
+module.exports = {getMedicine, addMedicine}
