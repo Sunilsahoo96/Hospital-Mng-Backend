@@ -3,7 +3,7 @@ const router = express.Router();
 const Patient = require("../Models/Patient");
 
 // Register new patient
-router.post('/patients', async (req, res) => {
+router.post('/registration', async (req, res) => {
   try {
     const { uan, patientName, guardianName, address, mobile, alternateMobile } = req.body;
     
