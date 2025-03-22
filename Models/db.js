@@ -1,14 +1,11 @@
-const { MongoClient } = require('mongodb');
+require('dotenv').config();
 const mongoose = require('mongoose');
 
-const connectionString = 'mongodb://127.0.0.1:27017/Hospital-Management-System';
+const connectionString = process.env.MONGO_URI;
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(connectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(connectionString);
     console.log('MongoDB connected successfully on port 27017!');
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
