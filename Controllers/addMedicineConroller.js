@@ -1,4 +1,3 @@
-
 const Medicine = require("../Models/Medicine");
 
 // Add new medicine
