@@ -19,7 +19,7 @@ connectDB().then(() => {
   // Route middlewares
   app.use("/api/auth", authRoutes);
   app.use("/api/medicine", medicineRoutes);
-  app.use("/api", patientRoutes);
+  app.use("/api/patient", patientRoutes);
 
   // Error handling middleware
   app.use((err, req, res, next) => {
