@@ -22,10 +22,28 @@ const addMedicine = async (req, res) => {
 // Get all medicines
 const getMedicine = async (req, res) => {
   try {
-    const medicines = await Medicine.find().sort({ createdAt: -1 });
-    res.status(200).json(medicines);
+    const { page = 1, limit = 10, search = "", sort = "asc" } = req.query;
+    
+    // Convert page & limit to integers
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    // Search filter
+    const searchFilter = search ? { MedicineName: { $regex: search, $options: "i" } } : {};
+
+    // Sorting
+    const sortOrder = sort === "asc" ? 1 : -1;
+
+    const medicines = await Medicine.find(searchFilter)
+      .sort({ MedicineName: sortOrder })
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    const total = await Medicine.countDocuments(searchFilter);
+
+    res.json({ medicines, total });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch medicines", details: error.message });
+    res.status(500).json({ message: "Server Error", error });
   }
 };
 
