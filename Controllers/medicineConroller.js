@@ -1,20 +1,29 @@
 const Medicine = require("../Models/Medicine");
 
 // Add new medicine
-const addMedicine= async (req, res) => {
+const addMedicine = async (req, res) => {
   try {
-    const { MedicineName, Manufacturer, MfgDate, ExpiryDate, BuyingPrice, SellingPrice, MedicinePerStrip, HowManyStrips } = req.body;
+    const {
+      MedicineName,
+      Manufacturer,
+      MfgDate,
+      ExpiryDate,
+      BuyingPrice,
+      SellingPrice,
+      MedicinePerStrip,
+      HowManyStrips,
+    } = req.body;
 
     let existingMedicine = await Medicine.findOne({ MedicineName });
 
     if (existingMedicine) {
-      // If medicine exists, update the strip count
       existingMedicine.HowManyStrips += parseInt(HowManyStrips, 10);
       await existingMedicine.save();
-      return res.json({ message: "Medicine strip count updated successfully!" });
+      return res.json({
+        message: "Medicine strip count updated successfully!",
+      });
     }
 
-    // If medicine does not exist, create a new entry
     const newMedicine = new Medicine({
       MedicineName,
       Manufacturer,
@@ -28,27 +37,21 @@ const addMedicine= async (req, res) => {
 
     await newMedicine.save();
     res.json({ message: "New medicine added successfully!" });
-
   } catch (error) {
     console.error("Error adding medicine:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-
 // Get all medicines
 const getMedicine = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = "", sort = "asc" } = req.query;
-    
-    // Convert page & limit to integers
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
-
-    // Search filter
-    const searchFilter = search ? { MedicineName: { $regex: search, $options: "i" } } : {};
-
-    // Sorting
+    const searchFilter = search
+      ? { MedicineName: { $regex: search, $options: "i" } }
+      : {};
     const sortOrder = sort === "asc" ? 1 : -1;
 
     const medicines = await Medicine.find(searchFilter)
@@ -64,4 +67,4 @@ const getMedicine = async (req, res) => {
   }
 };
 
-module.exports = {getMedicine, addMedicine}
+module.exports = { getMedicine, addMedicine };

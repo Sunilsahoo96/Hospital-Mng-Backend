@@ -1,33 +1,30 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./Models/db");
-
-// Import route files
 const authRoutes = require("./Routes/AuthRoutes");
 const medicineRoutes = require("./Routes/MedicineRoutes");
 const patientRoutes = require("./Routes/PatientRoutes");
 
 const app = express();
-
-// Middleware
+ 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Database connection
-connectDB().then(() => {
-  // Route middlewares
-  app.use("/api/auth", authRoutes);
-  app.use("/api/medicine", medicineRoutes);
-  app.use("/api/patient", patientRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/medicine", medicineRoutes);
+app.use("/api/patient", patientRoutes);
 
-  // Error handling middleware
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: "Something went wrong!" });
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(err.status || 500).json({
+    error: err.message || "Internal Server Error",
   });
+});
 
-  const PORT = process.env.PORT || 8000;
+
+connectDB().then(() => {
+  const PORT = process.env.PORT || 8080;
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
