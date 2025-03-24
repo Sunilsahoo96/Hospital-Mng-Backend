@@ -3,7 +3,7 @@ const cors = require("cors");
 const connectDB = require("./Models/db");
 const authRoutes = require("./Routes/AuthRoutes");
 const medicineRoutes = require("./Routes/MedicineRoutes");
-const patientRoutes = require("./Routes/PatientRoutes");
+const patientRoutes   = require("./Routes/PatientRoutes");
 
 const app = express();
  
@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
 
 
 connectDB().then(() => {
-  const PORT = process.env.PORT || 8080;
+  const PORT = process.env.PORT || 8000;
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
