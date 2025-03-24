@@ -54,7 +54,9 @@ const getMedicine = async (req, res) => {
       : {};
     const sortOrder = sort === "asc" ? 1 : -1;
 
+    // Fetch only required fields (MedicineName, Manufacturer, ExpiryDate, SellingPrice)
     const medicines = await Medicine.find(searchFilter)
+      .select("MedicineName Manufacturer ExpiryDate SellingPrice") // Select only necessary fields
       .sort({ MedicineName: sortOrder })
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
@@ -66,5 +68,6 @@ const getMedicine = async (req, res) => {
     res.status(500).json({ message: "Server Error", error });
   }
 };
+
 
 module.exports = { getMedicine, addMedicine };
