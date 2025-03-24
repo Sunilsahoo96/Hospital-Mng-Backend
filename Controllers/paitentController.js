@@ -35,4 +35,14 @@ const registerPatient = async (req, res) => {
   }
 };
 
-module.exports = {registerPatient}  ;
+const allPatient = async (req, res) => {
+  try {
+    const patients = await Patient.find();
+    res.json(patients);
+  } catch (error) {
+    console.error("Error fetching patients:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {registerPatient, allPatient};
