@@ -56,7 +56,7 @@ const getMedicine = async (req, res) => {
 
     // Fetch only required fields (MedicineName, Manufacturer, ExpiryDate, SellingPrice)
     const medicines = await Medicine.find(searchFilter)
-      .select("MedicineName Manufacturer ExpiryDate SellingPrice") // Select only necessary fields
+      .select("MedicineName Manufacturer ExpiryDate SellingPrice MedicinePerStrip HowManyStrips") // Select only necessary fields
       .sort({ MedicineName: sortOrder })
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
