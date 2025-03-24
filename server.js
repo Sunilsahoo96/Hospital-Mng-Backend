@@ -3,7 +3,7 @@ const cors = require("cors");
 const connectDB = require("./Models/db");
 const authRoutes = require("./Routes/AuthRoutes");
 const medicineRoutes = require("./Routes/MedicineRoutes");
-const patientRoutes = require("./Routes/PatientRoutes");
+const patientRoutes   = require("./Routes/PatientRoutes");
 
 const app = express();
  
