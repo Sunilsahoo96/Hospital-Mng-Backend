@@ -33,7 +33,32 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        exports.login = async (req, res) => {
+            try {
+                const { email, password } = req.body;
+        
+                // Find user in the database
+                const user = await User.findOne({ email }).select("email password"); // Only select email and password
+                if (!user) {
+                    return res.status(404).json({ message: "User not found. Please sign up first." });
+                }
+        
+                // Compare entered password with stored hashed password
+                const isPasswordValid = await bcrypt.compare(password, user.password);
+                if (!isPasswordValid) {
+                    return res.status(401).json({ message: "Incorrect email or password." });
+                }
+        
+                // Generate JWT token
+                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "2h" });
+        
+                res.json({ message: "Login successful", email: user.email, password: user.password, token });
+            } catch (error) {
+                console.error("Login error:", error);
+                res.status(500).json({ error: error.message });
+            }
+        };
+        
         // Find user in the database
         const user = await User.findOne({ email });
         if (!user) {
