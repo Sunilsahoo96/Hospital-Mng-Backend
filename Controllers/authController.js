@@ -1,14 +1,16 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User=require("../Models/Auth")
+const User=require("../Models/Auth");
+const createError = require('http-errors');
+
 require("dotenv").config();
 
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
 
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ message: "Invalid email format. Please enter a valid email." });
+            return next(createError.BadRequest("Invalid email format"))
         }
 
         const existingUser = await User.findOne({ email });

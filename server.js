@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./Models/db");
 const createError = require('http-errors');
+const morgan = require("morgan");
 const authRoutes = require("./Routes/AuthRoutes");
 const medicineRoutes = require("./Routes/MedicineRoutes");
 const patientRoutes   = require("./Routes/PatientRoutes");
@@ -9,6 +10,7 @@ const patientRoutes   = require("./Routes/PatientRoutes");
 const app = express();
  
 app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,7 +25,10 @@ app.use(async(req, res, next) =>{
 app.use((err, req, res, next) => {
   console.error("Error:", err.message);
   res.status(err.status || 500).json({
-    error: err.message || "Internal Server Error",
+    error: {
+      "status":err.status || 500,
+      "error": err.message || "Internal Server Error"
+    },
   });
 });
 
