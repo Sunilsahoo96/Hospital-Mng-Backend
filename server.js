@@ -1,11 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./Models/db");
-const createError = require('http-errors');
+const createError = require("http-errors");
 const morgan = require("morgan");
-const authRoutes = require("./Routes/AuthRoutes");
-const medicineRoutes = require("./Routes/MedicineRoutes");
-const patientRoutes   = require("./Routes/PatientRoutes");
 
 const app = express();
 app.use(cors());
@@ -13,24 +10,34 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/auth", authRoutes);
-app.use("/api/medicine", medicineRoutes);
-app.use("/api/patient", patientRoutes);
+app.use("/api/auth", async (req, res, next) => {
+  const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
+  authRoutes(req, res, next);
+});
 
-app.use(async(req, res, next) =>{
-  next(createError.NotFound('This route is not available'));
-})
+app.use("/api/medicine", async (req, res, next) => {
+  const medicineRoutes = (await import("./Routes/MedicineRoutes.js")).default;
+  medicineRoutes(req, res, next);
+});
+
+app.use("/api/patient", async (req, res, next) => {
+  const patientRoutes = (await import("./Routes/PatientRoutes.js")).default;
+  patientRoutes(req, res, next);
+});
+
+app.use(async (req, res, next) => {
+  next(createError.NotFound("This route is not available"));
+});
 
 app.use((err, req, res, next) => {
   console.error("Error:", err.message);
   res.status(err.status || 500).json({
     error: {
-      "status":err.status || 500,
-      "error": err.message || "Internal Server Error"
+      status: err.status || 500,
+      error: err.message || "Internal Server Error",
     },
   });
 });
-
 
 connectDB().then(() => {
   const PORT = process.env.PORT || 8000;
