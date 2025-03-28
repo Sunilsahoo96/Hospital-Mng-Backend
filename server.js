@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./Models/db");
+const createError = require('http-errors');
 const authRoutes = require("./Routes/AuthRoutes");
 const medicineRoutes = require("./Routes/MedicineRoutes");
 const patientRoutes   = require("./Routes/PatientRoutes");
@@ -14,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/medicine", medicineRoutes);
 app.use("/api/patient", patientRoutes);
+
+app.use(async(req, res, next) =>{
+  next(createError.NotFound('This route is not available'));
+})
 
 app.use((err, req, res, next) => {
   console.error("Error:", err.message);
