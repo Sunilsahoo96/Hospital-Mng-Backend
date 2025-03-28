@@ -1,7 +1,7 @@
 const Medicine = require("../Models/Medicine");
 
 // Add new medicine
-const addMedicine = async (req, res) => {
+const addMedicine = async (req, res, next) => {
   try {
     const {
       MedicineName,
@@ -38,8 +38,7 @@ const addMedicine = async (req, res) => {
     await newMedicine.save();
     res.json({ message: "New medicine added successfully!" });
   } catch (error) {
-    console.error("Error adding medicine:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return next(error);
   }
 };
 
@@ -54,9 +53,10 @@ const getMedicine = async (req, res) => {
       : {};
     const sortOrder = sort === "asc" ? 1 : -1;
 
-    // Fetch only required fields (MedicineName, Manufacturer, ExpiryDate, SellingPrice)
     const medicines = await Medicine.find(searchFilter)
-      .select("MedicineName Manufacturer ExpiryDate SellingPrice MedicinePerStrip HowManyStrips") // Select only necessary fields
+      .select(
+        "MedicineName Manufacturer ExpiryDate SellingPrice MedicinePerStrip HowManyStrips"
+      ) 
       .sort({ MedicineName: sortOrder })
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
@@ -65,9 +65,8 @@ const getMedicine = async (req, res) => {
 
     res.json({ medicines, total });
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error });
+    return next(error);
   }
 };
-
 
 module.exports = { getMedicine, addMedicine };

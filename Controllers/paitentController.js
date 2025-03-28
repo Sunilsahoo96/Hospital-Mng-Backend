@@ -1,7 +1,7 @@
 const Patient = require("../Models/Patient");
 
 // Register new patient
-const registerPatient = async (req, res) => {
+const registerPatient = async (req, res, next) => {
   try {
     const { uan, patientName, guardianName, address, mobile, alternateMobile } = req.body;
 
@@ -28,10 +28,7 @@ const registerPatient = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({
-      message: error.message || 'Failed to register patient'
-    });
+   return next(error)
   }
 };
 
@@ -40,8 +37,7 @@ const allPatient = async (req, res) => {
     const patients = await Patient.find();
     res.json(patients);
   } catch (error) {
-    console.error("Error fetching patients:", error);
-    res.status(500).json({ message: "Server error" });
+   return next(error)
   }
 };
 
