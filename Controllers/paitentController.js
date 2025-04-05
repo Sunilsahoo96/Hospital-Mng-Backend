@@ -3,16 +3,16 @@ const Patient = require("../Models/Patient");
 // Register new patient
 const registerPatient = async (req, res, next) => {
   try {
-    const { uan, patientName, guardianName, address, mobile, alternateMobile } = req.body;
+    const { pun, patientName, guardianName, address, mobile, alternateMobile } = req.body;
 
-    // Check for existing UAN
-    const existingPatient = await Patient.findOne({ uan });
+    // Check for existing PUN
+    const existingPatient = await Patient.findOne({ pun });
     if (existingPatient) {
-      return res.status(400).json({ message: 'Patient with this UAN already exists' });
+      return res.status(400).json({ message: 'Patient with this PUN already exists' });
     }
 
     const newPatient = new Patient({
-      uan,
+      pun,
       patientName,
       guardianName,
       address,
