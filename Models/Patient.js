@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema({
-  uan: {
+  pun: {
     type: String,
     required: true,
     unique: true
