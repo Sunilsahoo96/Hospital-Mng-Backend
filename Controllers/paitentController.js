@@ -41,4 +41,18 @@ const allPatient = async (req, res) => {
   }
 };
 
-module.exports = {registerPatient, allPatient};
+
+// Get Patient Details by UAN
+const UANPatient = async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ uan: req.params.uan });
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+    res.json({ patientName: patient.patientName, mobile: patient.mobile });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching patient details" });
+  }
+};
+
+module.exports = {registerPatient, allPatient , UANPatient};

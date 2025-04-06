@@ -69,4 +69,44 @@ const getMedicine = async (req, res) => {
   }
 };
 
-module.exports = { getMedicine, addMedicine };
+
+// Get List of Medicines
+const getNamePrice = async (req, res) => {
+  try {
+    const medicines = await Medicine.find({}, { MedicineName: 1, SellingPrice: 1, _id: 0 });
+    
+    console.log("Fetched Medicines:", medicines); // Debugging
+    if (medicines.length === 0) {
+      console.log("No medicines found in database!");
+    }
+
+    res.json(medicines);
+  } catch (error) {
+    console.error("Error fetching medicines:", error);
+    res.status(500).json({ message: "Error fetching medicines" });
+  }
+};
+
+
+
+
+
+// Sell Medicines (Save sale record)
+const sellMedicine = async (req, res) => {
+  try {
+    const { uan, patientName, mobile, medicines } = req.body;
+
+    if (!uan || !patientName || !mobile || !medicines.length) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const sale = new Sale({ uan, patientName, mobile, medicines });
+    await sale.save();
+
+    res.status(201).json({ message: "Medicine sold successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Error processing sale" });
+  }
+};
+
+module.exports = { getMedicine, addMedicine, getNamePrice, sellMedicine };

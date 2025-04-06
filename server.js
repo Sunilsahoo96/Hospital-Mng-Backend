@@ -25,6 +25,19 @@ app.use("/api/patient", async (req, res, next) => {
   patientRoutes(req, res, next);
 });
 
+
+app.use("/api/medicine/sell-medicine", async (req, res, next) => {
+  const medicineRoutes = (await import("./Routes/MedicineRoutes.js")).default;
+  medicineRoutes(req, res, next);
+});
+
+app.use("/api/medicine/get-medicine-name", async (req, res, next) => {
+  const medicineRoutes = (await import("./Routes/MedicineRoutes.js")).default;
+  medicineRoutes(req, res, next);
+});
+
+
+
 app.use(async (req, res, next) => {
   next(createError.NotFound("This route is not available"));
 });
