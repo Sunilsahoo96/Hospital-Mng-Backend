@@ -1,4 +1,5 @@
 const Medicine = require("../Models/Medicine");
+const Sale = require("../Models/Sell")
 
 // Add new medicine
 const addMedicine = async (req, res, next) => {
@@ -94,19 +95,22 @@ const getNamePrice = async (req, res) => {
 // Sell Medicines (Save sale record)
 const sellMedicine = async (req, res) => {
   try {
-    const { uan, patientName, mobile, medicines } = req.body;
+    const { pun, patientName, mobile, medicines } = req.body;
+    console.log("Sell Request Body:", req.body); // 👈 Log this
 
-    if (!uan || !patientName || !mobile || !medicines.length) {
+    if (!pun || !patientName || !mobile || !medicines.length) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const sale = new Sale({ uan, patientName, mobile, medicines });
+    const sale = new Sale({ pun, patientName, mobile, medicines });
     await sale.save();
 
     res.status(201).json({ message: "Medicine sold successfully!" });
   } catch (error) {
-    res.status(500).json({ message: "Error processing sale" });
+    console.error("Error saving sale:", error); // 👈 Detailed error
+    res.status(500).json({ message: "Error processing sale", error: error.message });
   }
 };
+
 
 module.exports = { getMedicine, addMedicine, getNamePrice, sellMedicine };

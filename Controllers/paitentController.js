@@ -45,7 +45,7 @@ const allPatient = async (req, res) => {
 // Get Patient Details by UAN
 const UANPatient = async (req, res) => {
   try {
-    const patient = await Patient.findOne({ uan: req.params.uan });
+    const patient = await Patient.findOne({ pun: req.params.pun });
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }

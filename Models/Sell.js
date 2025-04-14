@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const SaleSchema = new mongoose.Schema({
-  uan: { type: String, required: true },
+  pun: { type: String, required: true },
   patientName: { type: String, required: true },
   mobile: { type: String, required: true },
   medicines: [

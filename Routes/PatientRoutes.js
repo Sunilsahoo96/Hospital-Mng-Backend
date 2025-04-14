@@ -8,6 +8,6 @@ const {
 
 router.post("/registration", registerPatient);
 router.get("/allPatient", allPatient);
-router.get("/allPatient/:uan", UANPatient);
+router.get("/allPatient/:pun", UANPatient);
 
 module.exports = router;
