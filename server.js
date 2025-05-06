@@ -5,10 +5,15 @@ const createError = require("http-errors");
 const morgan = require("morgan");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://hospital-management-system-fzws.onrender.com',
+  // credentials: true, // if you use cookies or auth headers
+}));
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.options('*', cors());
 
 app.use("/api/auth", async (req, res, next) => {
   const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
