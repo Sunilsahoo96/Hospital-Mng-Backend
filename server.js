@@ -5,21 +5,32 @@ const createError = require("http-errors");
 const morgan = require("morgan");
 
 const app = express();
-app.use(cors({
-  origin: 'https://hospital-management-system-fzws.onrender.com',
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // if you use cookies or auth headers
-}));
+const corsOptions = {
+  origin: "https://hospital-management-system-fzws.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.options('*', cors());
 
-app.use("/api/auth", async (req, res, next) => {
-  const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
-  authRoutes(req, res, next);
+
+app.get("/api/test-cors", (req, res) => {
+  res.json({ message: "CORS is working properly!" });
 });
+
+// app.use("/api/auth", async (req, res, next) => {
+//   const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
+//   authRoutes(req, res, next);
+// });
+
+const authRoutes = require("./Routes/AuthRoutes");
+app.use("/api/auth", authRoutes);
 
 app.use("/api/medicine", async (req, res, next) => {
   const medicineRoutes = (await import("./Routes/MedicineRoutes.js")).default;
