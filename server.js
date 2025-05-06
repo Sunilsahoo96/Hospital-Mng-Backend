@@ -5,8 +5,19 @@ const createError = require("http-errors");
 const morgan = require("morgan");
 
 const app = express();
+const allowedOrigins = [
+  "https://hospital-management-system-fzws.onrender.com",
+  "http://localhost:3000" 
+];
+
 const corsOptions = {
-  origin: "https://hospital-management-system-fzws.onrender.com",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
