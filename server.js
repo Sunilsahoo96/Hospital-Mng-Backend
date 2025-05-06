@@ -24,13 +24,13 @@ app.get("/api/test-cors", (req, res) => {
   res.json({ message: "CORS is working properly!" });
 });
 
-// app.use("/api/auth", async (req, res, next) => {
-//   const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
-//   authRoutes(req, res, next);
-// });
+app.use("/api/auth", async (req, res, next) => {
+  const authRoutes = (await import("./Routes/AuthRoutes.js")).default;
+  authRoutes(req, res, next);
+});
 
-const authRoutes = require("./Routes/AuthRoutes");
-app.use("/api/auth", authRoutes);
+// const authRoutes = require("./Routes/AuthRoutes");
+// app.use("/api/auth", authRoutes);
 
 app.use("/api/medicine", async (req, res, next) => {
   const medicineRoutes = (await import("./Routes/MedicineRoutes.js")).default;
