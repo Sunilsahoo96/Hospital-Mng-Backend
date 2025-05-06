@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const app = express();
 app.use(cors({
   origin: 'https://hospital-management-system-fzws.onrender.com',
-  // credentials: true, // if you use cookies or auth headers
+  credentials: true, // if you use cookies or auth headers
 }));
 
 app.use(morgan("dev"));
