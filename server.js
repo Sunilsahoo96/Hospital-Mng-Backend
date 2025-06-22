@@ -1,34 +1,11 @@
 const express = require("express");
-const cors = require("cors");
 const connectDB = require("./Models/db");
 const createError = require("http-errors");
-const morgan = require("morgan");
+const errorHandler = require("./middleware/errorHandler");
+const globalMiddleware = require("./middlewares/globalMiddleware.js");
 
 const app = express();
-const allowedOrigins = [
-  "https://hospital-management-system-fzws.onrender.com",
-  "http://localhost:3000" 
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
-
-app.use(morgan("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+globalMiddleware(app);
 
 
 app.get("/api/test-cors", (req, res) => {
@@ -58,15 +35,7 @@ app.use(async (req, res, next) => {
   next(createError.NotFound("This route is not available"));
 });
 
-app.use((err, req, res, next) => {
-  console.error("Error:", err.message);
-  res.status(err.status || 500).json({
-    error: {
-      status: err.status || 500,
-      error: err.message || "Internal Server Error",
-    },
-  });
-});
+app.use(errorHandler);
 
 connectDB().then(() => {
   const PORT = process.env.PORT || 8000;
